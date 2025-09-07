@@ -44,13 +44,20 @@ describe('Abrigo de Animais', () => {
     const res = new AbrigoAnimais().encontraPessoas('CAIXA,NOVELO', 'CAIXA, RATO,NOVELO', 'Bola');
     
     expect(res.lista[0]).toBe('Bola - abrigo');
-    expect(res.erro).toBeFalsy;
+    expect(res.erro).toBeFalsy();
+  })
+
+  test('Deve enviar animal para o abrigo, ambas pessoas inaptas', () => {
+    const res = new AbrigoAnimais().encontraPessoas('CAIXA,NOVELO', 'SKATE, RATO', "Zero");
+    expect(res.lista[0]).toBe('Zero - abrigo')
+    expect(res.lista.length).toBe(1)
+    expect(res.erro).toBeFalsy();
   })
 
   test('Deve enviar animal para o abrigo, o Loco não fica sozinho', () => {
     const res = new AbrigoAnimais().encontraPessoas('SKATE, RATO', 'BOLA, CAIXA', 'Loco');
     expect(res.lista[0]).toBe('Loco - abrigo');
-    expect(res.erro).toBeFalsy;
+    expect(res.erro).toBeFalsy();
   })
 
   test('Deve gerar erro de Animal duplicado', () => {
@@ -62,7 +69,7 @@ describe('Abrigo de Animais', () => {
   test('Deve gerar erro de Brinquedo duplicado', () => {
     const res = new AbrigoAnimais().encontraPessoas('BOLA, LASER, BOLA', 'RATO, BOLA', 'Rex')
     expect(res.erro).toBe("Brinquedo inválido");
-    expect(res.lista).toBeFalsy;
+    expect(res.lista).toBeFalsy();
   })
 
   test('Deve eviar o gato Mimi para o abrigo (gatos não dividem brinquedos)', () => {
@@ -70,13 +77,13 @@ describe('Abrigo de Animais', () => {
     expect(res.lista[0]).toBe('Fofo - abrigo');
     expect(res.lista[1]).toBe('Mimi - pessoa 1');
     expect(res.lista[2]).toBe('Zero - pessoa 2');
-    expect(res.erro).toBeFalsy;
+    expect(res.erro).toBeFalsy();
   })
 
   test('Deve rejeitar animal, ordem dos brinquedos errada', () => {
     const res = new AbrigoAnimais().encontraPessoas('RATO, LASER, BOLA', 'SKATE, RATO', 'Mimi');
     expect(res.lista[0]).toBe("Mimi - abrigo");
-    expect(res.erro).toBeFalsy;
+    expect(res.erro).toBeFalsy();
   })
 
 });
