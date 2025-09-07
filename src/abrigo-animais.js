@@ -1,6 +1,8 @@
 import { Pessoa } from './Pessoa.js';
 import { Animal } from './Animal.js';
 import { ValidarBrinquedos } from './utils/validar-brinquedos.js';
+import { ValidarAnimais } from './utils/validar-animais.js';
+
 
 class AbrigoAnimais {
   constructor() {
@@ -17,30 +19,15 @@ class AbrigoAnimais {
 
   encontraPessoas(brinquedosPessoa1, brinquedosPessoa2, ordemAnimais) {
     const validadorBrinquedos = new ValidarBrinquedos();
+    const validadorAnimais = new ValidarAnimais();
     const listaBrinquedos1 = validadorBrinquedos.validaBrinquedos(brinquedosPessoa1);
     const listaBrinquedos2 = validadorBrinquedos.validaBrinquedos(brinquedosPessoa2);
-    const nomesAnimais = ordemAnimais.split(",").map(a => a.trim());
+    const nomesAnimais = validadorAnimais.validaAnimais(ordemAnimais, this.animaisDisponiveis);
 
     //se o retorno tiver a propiedade "erro", retorna a mensagem de erro
     if (listaBrinquedos1.erro) return listaBrinquedos1;
     if (listaBrinquedos2.erro) return listaBrinquedos2;
-    
-    //Eliminar elementos repetidos, usando o Set, portanto se as listas(Set e []) 
-    //tiverem tamanos diferentes, significa que haviam elementos duplicados
-    /*if (new Set(listaBrinquedos1).size !== listaBrinquedos1.length ||
-      new Set(listaBrinquedos2).size !== listaBrinquedos2.length) {
-      return { erro: "Brinquedo inválido", lista: null };
-    }*/
-
-    //Verifica se os nomes escolhidos existem na lista de adoção, ou se ja existem no set
-    const setAnimais = new Set();
-    for (let nome of nomesAnimais) {
-      if (!this.animaisDisponiveis[nome] || setAnimais.has(nome)) {
-        return { erro: "Animal inválido", lista: null };
-      }
-      setAnimais.add(nome);
-    }
-      
+    if (nomesAnimais.erro) return nomesAnimais;
 
     const pessoa1 = new Pessoa("pessoa 1", listaBrinquedos1);
     const pessoa2 = new Pessoa("pessoa 2", listaBrinquedos2);
@@ -48,6 +35,7 @@ class AbrigoAnimais {
     const brinquedosJaUsadosPess1 = new Set();
     const brinquedosJaUsadosPess2 = new Set();
 
+    //verificar aptidão de cada pessoa para adotar um animal
     for (let nomeAnimal of nomesAnimais) {
       const animal = this.animaisDisponiveis[nomeAnimal];
       let apta1 = pessoa1.aptaParaAdotar(animal) && pessoa1.podeAdotarMaisAnimais();
