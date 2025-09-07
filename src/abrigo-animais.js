@@ -1,6 +1,6 @@
 import { Pessoa } from './Pessoa.js';
 import { Animal } from './Animal.js';
-
+import { ValidarBrinquedos } from './utils/validar-brinquedos.js';
 
 class AbrigoAnimais {
   constructor() {
@@ -16,19 +16,23 @@ class AbrigoAnimais {
   }
 
   encontraPessoas(brinquedosPessoa1, brinquedosPessoa2, ordemAnimais) {
-    //Fazendo o split por ',' das entradas, e padronizando para.
-    const listaBrinquedos1 = brinquedosPessoa1.split(",").map(b => b.trim().toUpperCase());
-    const listaBrinquedos2 = brinquedosPessoa2.split(",").map(b => b.trim().toUpperCase());
+    const validadorBrinquedos = new ValidarBrinquedos();
+    const listaBrinquedos1 = validadorBrinquedos.validaBrinquedos(brinquedosPessoa1);
+    const listaBrinquedos2 = validadorBrinquedos.validaBrinquedos(brinquedosPessoa2);
     const nomesAnimais = ordemAnimais.split(",").map(a => a.trim());
 
+    //se o retorno tiver a propiedade "erro", retorna a mensagem de erro
+    if (listaBrinquedos1.erro) return listaBrinquedos1;
+    if (listaBrinquedos2.erro) return listaBrinquedos2;
+    
     //Eliminar elementos repetidos, usando o Set, portanto se as listas(Set e []) 
     //tiverem tamanos diferentes, significa que haviam elementos duplicados
-    if (new Set(listaBrinquedos1).size !== listaBrinquedos1.length ||
+    /*if (new Set(listaBrinquedos1).size !== listaBrinquedos1.length ||
       new Set(listaBrinquedos2).size !== listaBrinquedos2.length) {
       return { erro: "Brinquedo inválido", lista: null };
-    }
+    }*/
 
-    //Verifica se os nomes escolhidos existem na lista de adoção
+    //Verifica se os nomes escolhidos existem na lista de adoção, ou se ja existem no set
     const setAnimais = new Set();
     for (let nome of nomesAnimais) {
       if (!this.animaisDisponiveis[nome] || setAnimais.has(nome)) {
@@ -36,6 +40,7 @@ class AbrigoAnimais {
       }
       setAnimais.add(nome);
     }
+      
 
     const pessoa1 = new Pessoa("pessoa 1", listaBrinquedos1);
     const pessoa2 = new Pessoa("pessoa 2", listaBrinquedos2);
