@@ -47,6 +47,13 @@ describe('Abrigo de Animais', () => {
     expect(res.erro).toBeFalsy();
   })
 
+   test('Deve ser adotado pela pessoa1, apenas uma apta', () => {
+    const res = new AbrigoAnimais().encontraPessoas('BOLA, RATO, LASER', 'CAIXA, RATO, NOVELO', 'Fofo');
+    
+    expect(res.lista[0]).toBe('Fofo - pessoa 1');
+    expect(res.erro).toBeFalsy();
+  })
+
   test('Deve enviar animal para o abrigo, ambas pessoas inaptas', () => {
     const res = new AbrigoAnimais().encontraPessoas('CAIXA,NOVELO', 'SKATE, RATO', "Zero");
     expect(res.lista[0]).toBe('Zero - abrigo')

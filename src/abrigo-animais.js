@@ -27,6 +27,7 @@ class AbrigoAnimais {
 
     //se o retorno tiver a propiedade "erro", retorna a mensagem de erro
     if (brinquedosValidosPessoa1.erro) return brinquedosValidosPessoa1;
+    console.log(brinquedosValidosPessoa1);
     if (brinquedosValidosPessoa2.erro) return brinquedosValidosPessoa2;
     if (nomesAnimais.erro) return nomesAnimais;
     
